@@ -1,2 +1,9 @@
 server:
   port: 3001
+  error:
+    include-stacktrace: never
+
+anony:
+  jwt:
+    secret: secret
+    expiration: 300000
