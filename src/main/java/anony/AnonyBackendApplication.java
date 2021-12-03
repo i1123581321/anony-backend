@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import anony.entity.User;
 import anony.repository.UserRepository;
 
 @SpringBootApplication
@@ -20,7 +19,6 @@ public class AnonyBackendApplication {
     @Bean
     CommandLineRunner demo(UserRepository repository) {
         return (var args) -> {
-            repository.save(new User("test", "123456"));
         };
     }
 

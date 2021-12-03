@@ -2,7 +2,7 @@
  * File Created: 2021/12/02 19:54:32
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/02 20:26:02
+ * Last Modified: 2021/12/03 08:02:56
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.security.jwt;
@@ -27,10 +27,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(AuthTokenFilter.class);
-    @Autowired
-    private JwtUtils jwtUtils;
 
-    @Autowired
+    private JwtUtils jwtUtils;
     private UserDetailsService userDetailsService;
 
     @Override
@@ -38,17 +36,27 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             parse(request).filter(jwtUtils::validate).ifPresent(jwt -> {
-            var username = jwtUtils.getUsername(jwt);
-            var userDetails = userDetailsService.loadUserByUsername(username);
-            var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        });
+                var username = jwtUtils.getUsername(jwt);
+                var userDetails = userDetailsService.loadUserByUsername(username);
+                var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            });
         } catch (Exception e) {
             log.error("Cannot set authentication", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    @Autowired
+    public void setJwtUtils(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     private Optional<String> parse(HttpServletRequest request) {

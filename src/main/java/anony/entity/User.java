@@ -2,7 +2,7 @@
  * File Created: 2021/11/23 14:41:28
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/02 19:20:37
+ * Last Modified: 2021/12/03 08:15:19
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.entity;
@@ -108,6 +108,7 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.admin = false;
     }
 
 }

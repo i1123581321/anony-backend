@@ -2,7 +2,7 @@
  * File Created: 2021/12/02 19:55:25
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/02 20:13:21
+ * Last Modified: 2021/12/03 09:29:25
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.security.jwt;
@@ -48,7 +48,7 @@ public class JwtUtils {
 
     public boolean validate(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(token);
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature {}", e.getMessage());
