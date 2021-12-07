@@ -2,12 +2,13 @@
  * File Created: 2021/11/30 15:45:04
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/03 09:27:34
+ * Last Modified: 2021/12/07 11:52:06
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
-package anony.security;
+package anony.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,8 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import anony.security.jwt.AuthTokenFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,15 +33,12 @@ import anony.security.jwt.AuthTokenFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
+    private OncePerRequestFilter oncePerRequestFilter;
 
     @Autowired
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, @Qualifier("jwtFilter") OncePerRequestFilter oncePerRequestFilter) {
         this.userDetailsService = userDetailsService;
-    }
-
-    @Bean
-    public AuthTokenFilter authTokenFilter() {
-        return new AuthTokenFilter();
+        this.oncePerRequestFilter = oncePerRequestFilter;
     }
 
     @Bean
@@ -76,10 +73,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/token").permitAll()
-                .antMatchers("/").permitAll()
+                // permit swagger
+                .antMatchers("/swagger-ui/").permitAll()
+                // permit post token
+                .antMatchers(HttpMethod.POST, "/token").permitAll()
+                // permit get api list
+                .antMatchers(HttpMethod.GET, "/").permitAll()
+                // permit post user
                 .antMatchers(HttpMethod.POST, "/user").permitAll()
                 .anyRequest().authenticated();
-        http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(oncePerRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

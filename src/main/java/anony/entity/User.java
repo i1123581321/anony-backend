@@ -2,7 +2,7 @@
  * File Created: 2021/11/23 14:41:28
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/03 08:15:19
+ * Last Modified: 2021/12/04 12:49:27
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.entity;
@@ -28,7 +28,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     // authentication
     @Column(name = "username", unique = true, nullable = false)
@@ -51,11 +51,11 @@ public class User {
 
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

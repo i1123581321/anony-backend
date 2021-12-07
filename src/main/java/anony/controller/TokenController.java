@@ -2,7 +2,7 @@
  * File Created: 2021/11/30 15:41:17
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/03 09:23:19
+ * Last Modified: 2021/12/04 13:44:17
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.controller;
@@ -44,12 +44,7 @@ public class TokenController {
                 .authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         var jwt = jwtUtils.generateJwtToken(auth);
-        TokenResponse tokenResponse = new TokenResponse() {
-            @Override
-            public String getToken() {
-                return jwt;
-            }
-        };
+        var tokenResponse = new TokenResponse(jwt);
         var tokenEntity = EntityModel.of(tokenResponse);
         return ResponseEntity.ok().body(tokenEntity);
     }

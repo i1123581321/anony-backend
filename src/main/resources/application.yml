@@ -5,5 +5,5 @@ server:
 
 anony:
   jwt:
-    secret: secret
+    secret: c5d01695-d05f-521b-89db-70bb498b79b1
     expiration: 300000
