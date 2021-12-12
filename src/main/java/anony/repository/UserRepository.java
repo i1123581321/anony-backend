@@ -2,7 +2,7 @@
  * File Created: 2021/11/23 15:12:47
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/03 09:06:18
+ * Last Modified: 2021/12/12 12:22:02
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.repository;
@@ -18,7 +18,7 @@ import anony.payload.response.UserResponse;
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     @Query("select u from User u where u.username = ?1")
     Optional<UserResponse> findResponseByUsername(String username);

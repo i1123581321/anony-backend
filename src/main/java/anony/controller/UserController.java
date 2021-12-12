@@ -2,7 +2,7 @@
  * File Created: 2021/11/23 14:34:35
  * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  * -----
- * Last Modified: 2021/12/03 09:23:09
+ * Last Modified: 2021/12/12 12:22:33
  * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
  */
 package anony.controller;
@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<EntityModel<UserResponse>> get() {
+    public ResponseEntity<EntityModel<UserResponse>> get() {
         var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var user = userRepository.findResponseByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -58,9 +58,9 @@ public class UserController {
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<EntityModel<UserResponse>> post(@Valid @RequestBody UserRequest login) {
+    public ResponseEntity<EntityModel<UserResponse>> post(@Valid @RequestBody UserRequest login) {
 
-        if (userRepository.existsByUsername(login.getUsername())) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(login.getUsername()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("User %s already exist.", login.getUsername()));
         }
