@@ -29,8 +29,8 @@ import anony.security.jwt.JwtUtils;
 @RequestMapping(value = "/token", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TokenController {
 
-    private AuthenticationManager authenticationManager;
-    private JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     @Autowired
     public TokenController(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
@@ -41,7 +41,7 @@ public class TokenController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<TokenResponse>> put(@Valid @RequestBody UserRequest login) {
         var auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(login.username(), login.password()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         var jwt = jwtUtils.generateJwtToken(auth);
         var tokenResponse = new TokenResponse(jwt);

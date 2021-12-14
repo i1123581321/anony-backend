@@ -9,10 +9,10 @@ package anony.payload.response;
 
 import java.time.Instant;
 
-public interface UserResponse {
-    public String getUsername();
+public interface UserProjection {
+    String getUsername();
 
-    public Instant getCreateOn();
+    Instant getCreateOn();
 
-    public Instant getUpdateOn();
+    Instant getUpdateOn();
 }

@@ -28,15 +28,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 import anony.entity.User;
 import anony.payload.request.UserRequest;
-import anony.payload.response.UserResponse;
+import anony.payload.response.UserProjection;
 import anony.repository.UserRepository;
 
 @RestController
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<EntityModel<UserResponse>> get() {
+    public ResponseEntity<EntityModel<UserProjection>> get() {
         var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var user = userRepository.findResponseByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -58,18 +58,18 @@ public class UserController {
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<UserResponse>> post(@Valid @RequestBody UserRequest login) {
+    public ResponseEntity<EntityModel<UserProjection>> post(@Valid @RequestBody UserRequest login) {
 
-        if (Boolean.TRUE.equals(userRepository.existsByUsername(login.getUsername()))) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(login.username()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("User %s already exist.", login.getUsername()));
+                    String.format("User %s already exist.", login.password()));
         }
 
-        var user = new User(login.getUsername(), passwordEncoder.encode(login.getPassword()));
+        var user = new User(login.username(), passwordEncoder.encode(login.password()));
 
         userRepository.save(user);
 
-        var userResponse = userRepository.findResponseByUsername(login.getUsername())
+        var userResponse = userRepository.findResponseByUsername(login.username())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
 
         var userEntity = EntityModel.of(userResponse);

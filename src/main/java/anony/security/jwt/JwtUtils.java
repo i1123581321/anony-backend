@@ -22,13 +22,12 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtils {
-    @Value("${anony.jwt.expiration}")
-    private int jwtExpiration;
+    private final int jwtExpiration;
+    private final SecretKey key;
 
-    private SecretKey key;
-
-    public JwtUtils(@Value("${anony.jwt.secret}") String secret){
-        key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    public JwtUtils(@Value("${anony.jwt.secret}") String secret, @Value("${anony.jwt.expiration}") int jwtExpiration){
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.jwtExpiration = jwtExpiration;
     }
 
     public String generateJwtToken(Authentication authentication) {
@@ -38,6 +37,18 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .setIssuedAt(date)
+                .setExpiration(expiration)
+                .signWith(key)
+                .compact();
+    }
+
+    public String generateJwtToken(String username){
+        var date = new Date();
+        var expiration = new Date(date.getTime() + jwtExpiration);
+
+        return Jwts.builder()
+                .setSubject(username)
                 .setIssuedAt(date)
                 .setExpiration(expiration)
                 .signWith(key)
