@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/12/07 10:52:25
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/07 10:55:27
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.runner;
 
 import org.springframework.boot.CommandLineRunner;
@@ -16,8 +9,8 @@ import anony.repository.UserRepository;
 
 @Component
 public class InitDbRunner implements CommandLineRunner {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public InitDbRunner(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -25,7 +18,7 @@ public class InitDbRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         insertAdmin();
     }
 

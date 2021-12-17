@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/11/23 15:12:47
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/12 12:22:02
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.repository;
 
 import java.util.Optional;

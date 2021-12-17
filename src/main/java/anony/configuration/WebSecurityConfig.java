@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/11/30 15:45:04
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/07 11:52:06
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,13 +24,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDetailsService;
-    private OncePerRequestFilter oncePerRequestFilter;
+    private final UserDetailsService userDetailsService;
+    private final OncePerRequestFilter oncePerRequestFilter;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsService userDetailsService, @Qualifier("jwtFilter") OncePerRequestFilter oncePerRequestFilter) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, @Qualifier("jwtFilter") OncePerRequestFilter oncePerRequestFilter, AuthenticationEntryPoint authenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
         this.oncePerRequestFilter = oncePerRequestFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -57,18 +51,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new Http403ForbiddenEntryPoint();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
                 .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

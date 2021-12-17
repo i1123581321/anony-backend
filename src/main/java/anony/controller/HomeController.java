@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/11/23 15:45:46
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/12 12:19:53
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.controller;
 
 import java.util.Collections;

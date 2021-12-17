@@ -1,11 +1,4 @@
-/*
- * File Created: 2021/12/02 19:32:29
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/07 10:46:01
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
-package anony.security.services;
+package anony.security;
 
 import java.util.ArrayList;
 import java.util.List;

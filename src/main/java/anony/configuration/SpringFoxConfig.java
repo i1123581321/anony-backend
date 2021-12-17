@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/12/07 10:48:55
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/07 10:59:30
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.configuration;
 
 import org.springframework.context.annotation.Bean;

@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/11/23 14:41:28
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/04 12:49:27
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.entity;
 
 import java.time.Instant;

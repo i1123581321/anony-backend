@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/12/02 19:55:25
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/07 10:35:13
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.security.jwt;
 
 import java.nio.charset.StandardCharsets;
@@ -25,7 +18,7 @@ public class JwtUtils {
     private final int jwtExpiration;
     private final SecretKey key;
 
-    public JwtUtils(@Value("${anony.jwt.secret}") String secret, @Value("${anony.jwt.expiration}") int jwtExpiration){
+    public JwtUtils(@Value("${anony.jwt.secret}") String secret, @Value("${anony.jwt.expiration}") int jwtExpiration) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.jwtExpiration = jwtExpiration;
     }
@@ -43,7 +36,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String generateJwtToken(String username){
+    public String generateJwtToken(String username) {
         var date = new Date();
         var expiration = new Date(date.getTime() + jwtExpiration);
 
@@ -62,12 +55,5 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-    }
-
-    public void validate(String token) {
-        Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
     }
 }

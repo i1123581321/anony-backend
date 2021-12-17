@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/11/30 15:41:17
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/12 12:20:08
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.controller;
 
 import javax.validation.Valid;

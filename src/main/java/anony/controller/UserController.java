@@ -1,10 +1,3 @@
-/*
- * File Created: 2021/11/23 14:34:35
- * Author: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- * -----
- * Last Modified: 2021/12/12 12:22:33
- * Modified By: ZhengxuanQian (zhengxuanqian@smail.nju.edu.cn)
- */
 package anony.controller;
 
 import javax.validation.Valid;
@@ -18,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,8 +43,7 @@ public class UserController {
     public ResponseEntity<EntityModel<UserProjection>> get() {
         var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var user = userRepository.findResponseByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("ser %s not found", userDetails.getUsername())));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("%s not found", userDetails.getUsername())));
         var userEntity = EntityModel.of(user);
         var apiLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(HomeController.class).get()).withRel("api");
         userEntity.add(apiLink);
