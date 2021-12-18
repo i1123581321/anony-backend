@@ -7,7 +7,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import anony.entity.User;
 import anony.payload.request.UserRequest;
-import anony.payload.response.UserProjection;
+import anony.projection.UserProjection;
 import anony.repository.UserRepository;
 
 @RestController
@@ -40,18 +39,20 @@ public class UserController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<EntityModel<UserProjection>> get() {
+    public EntityModel<UserProjection> get() {
+        // get user details
         var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var user = userRepository.findResponseByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("%s not found", userDetails.getUsername())));
-        var userEntity = EntityModel.of(user);
+//
+        var user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException(String.format("%s not found", userDetails.getUsername())));
+        var userProjection = new UserProjection(user.getUsername(), user.getCreateOn(), user.getUpdateOn());
+        var userEntity = EntityModel.of(userProjection);
         var apiLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(HomeController.class).get()).withRel("api");
         userEntity.add(apiLink);
-        return ResponseEntity.ok().body(userEntity);
+        return userEntity;
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<UserProjection>> post(@Valid @RequestBody UserRequest login) {
+    public EntityModel<UserProjection> post(@Valid @RequestBody UserRequest login) {
 
         if (Boolean.TRUE.equals(userRepository.existsByUsername(login.username()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -60,14 +61,12 @@ public class UserController {
 
         var user = new User(login.username(), passwordEncoder.encode(login.password()));
 
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        var userProjection = new UserProjection(savedUser.getUsername(), savedUser.getCreateOn(), savedUser.getUpdateOn());
 
-        var userResponse = userRepository.findResponseByUsername(login.username())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
-
-        var userEntity = EntityModel.of(userResponse);
+        var userEntity = EntityModel.of(userProjection);
         var apiLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(HomeController.class).get()).withRel("api");
         userEntity.add(apiLink);
-        return ResponseEntity.ok().body(userEntity);
+        return userEntity;
     }
 }

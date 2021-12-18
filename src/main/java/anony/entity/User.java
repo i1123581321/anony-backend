@@ -48,10 +48,6 @@ public class User {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -72,16 +68,8 @@ public class User {
         return createOn;
     }
 
-    public void setCreateOn(Instant createOn) {
-        this.createOn = createOn;
-    }
-
     public Instant getUpdateOn() {
         return updateOn;
-    }
-
-    public void setUpdateOn(Instant updateOn) {
-        this.updateOn = updateOn;
     }
 
     public boolean isAdmin() {

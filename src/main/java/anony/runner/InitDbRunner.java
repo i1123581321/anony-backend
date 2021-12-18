@@ -23,7 +23,9 @@ public class InitDbRunner implements CommandLineRunner {
     }
 
     private void insertAdmin() {
-        var user = new User("admin", passwordEncoder.encode("123456"), true);
-        userRepository.save(user);
+        userRepository.findByUsername("admin").ifPresentOrElse(user -> {}, () -> {
+            var user = new User("admin", passwordEncoder.encode("123456"), true);
+            userRepository.save(user);
+        });
     }
 }
